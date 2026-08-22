@@ -1,0 +1,218 @@
+[data-bs-theme="dark"] .card {
+    background-color: #1a1a2e;
+    border-color: #2d2d44;
+}
+[data-bs-theme="dark"] .card-header {
+    background-color: #16213e;
+    border-bottom-color: #2d2d44;
+}
+[data-bs-theme="dark"] .card-footer {
+    background-color: #16213e;
+    border-top-color: #2d2d44;
+}
+[data-bs-theme="dark"] .btn-outline-secondary {
+    color: #adb5bd;
+    border-color: #495057;
+}
+[data-bs-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #495057;
+    color: #fff;
+}
+[data-bs-theme="dark"] .form-control {
+    background-color: #1a1a2e;
+    border-color: #2d2d44;
+    color: #e0e0e0;
+}
+[data-bs-theme="dark"] .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+}
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: #6c757d;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    max-width: 900px;
+    margin: 0 auto;
+    touch-action: none;
+}
+
+.day-name {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #6c757d;
+    padding: 8px 0 12px 0;
+    letter-spacing: 0.5px;
+    user-select: none;
+}
+
+[data-bs-theme="dark"] .day-name {
+    color: #adb5bd;
+}
+
+#calendarGrid {
+    display: contents;
+}
+
+.calendar-day {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: 0.15s;
+    width: 100%;
+    max-width: 80px;
+    margin: 0 auto;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.calendar-day.other-month {
+    color: #6c757d;
+    opacity: 0.4;
+    cursor: default;
+}
+
+.calendar-day.today {
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: bold;
+}
+
+[data-bs-theme="dark"] .calendar-day.today {
+    background-color: #3b82f6;
+}
+
+.calendar-day.selected {
+    background-color: #198754;
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.3);
+}
+
+[data-bs-theme="dark"] .calendar-day.selected {
+    background-color: #2ecc71;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.4);
+}
+
+.calendar-day:not(.other-month):not(.today):not(.selected):hover {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+[data-bs-theme="dark"] .calendar-day:not(.other-month):not(.today):not(.selected):hover {
+    background-color: rgba(59, 130, 246, 0.2);
+}
+
+.calendar-day:not(.other-month):active {
+    transform: scale(0.92);
+}
+
+#fullDateDisplay {
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+[data-bs-theme="dark"] #fullDateDisplay {
+    color: #3b82f6;
+}
+
+#calendarContainer {
+    touch-action: none;
+    cursor: grab;
+}
+
+#calendarContainer:active {
+    cursor: grabbing;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+#dayInput {
+    min-width: 55px;
+    max-width: 70px;
+}
+
+#monthInput {
+    min-width: 80px;
+    max-width: 110px;
+}
+
+#yearInput {
+    min-width: 65px;
+    max-width: 85px;
+}
+
+@media (max-width: 576px) {
+    .calendar-day {
+        font-size: 0.9rem;
+        max-width: 45px;
+    }
+    .day-name {
+        font-size: 0.7rem;
+        padding: 4px 0 8px 0;
+    }
+    .card-body {
+        padding: 0.75rem !important;
+    }
+    #fullDateDisplay {
+        font-size: 0.85rem;
+    }
+    #dayInput {
+        min-width: 40px;
+        max-width: 50px;
+        font-size: 0.75rem;
+    }
+    #monthInput {
+        min-width: 60px;
+        max-width: 80px;
+        font-size: 0.75rem;
+    }
+    #yearInput {
+        min-width: 50px;
+        max-width: 65px;
+        font-size: 0.75rem;
+    }
+    .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    .calendar-day {
+        font-size: 1rem;
+        max-width: 60px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    .calendar-day {
+        font-size: 1.1rem;
+        max-width: 70px;
+    }
+}
+
+@media (min-width: 993px) {
+    .calendar-day {
+        font-size: 1.2rem;
+        max-width: 80px;
+    }
+}

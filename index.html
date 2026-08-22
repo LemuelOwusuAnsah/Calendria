@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>Calendria</title>
+    
+    <meta name="description" content="Calendria - Free online calendar for 2026 and all years. Check any date, view month, jump to any day. Simple and fast.">
+    <meta name="keywords" content="calendria, calendar, online calendar, daily calendar, 2026 calendar, free calendar, date picker">
+    <meta name="author" content="Lemuel Owusu-Ansah">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="Calendria - Free Online Calendar">
+    <meta property="og:description" content="Check any date, month, or year. Free online calendar.">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Calendria - Free Online Calendar">
+    <meta name="twitter:description" content="Check any date instantly. Free calendar for all years.">
+    
+    <link rel="canonical" href="https://your-domain.com/calendria">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        [data-bs-theme="dark"] .card {
+            background-color: #1a1a2e;
+            border-color: #2d2d44;
+        }
+        [data-bs-theme="dark"] .card-header {
+            background-color: #16213e;
+            border-bottom-color: #2d2d44;
+        }
+        [data-bs-theme="dark"] .card-footer {
+            background-color: #16213e;
+            border-top-color: #2d2d44;
+        }
+        [data-bs-theme="dark"] .btn-outline-secondary {
+            color: #adb5bd;
+            border-color: #495057;
+        }
+        [data-bs-theme="dark"] .btn-outline-secondary:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+        [data-bs-theme="dark"] .form-control {
+            background-color: #1a1a2e;
+            border-color: #2d2d44;
+            color: #e0e0e0;
+        }
+        [data-bs-theme="dark"] .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+        [data-bs-theme="dark"] .form-control::placeholder {
+            color: #6c757d;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            max-width: 900px;
+            margin: 0 auto;
+            touch-action: none;
+        }
+
+        .day-name {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #6c757d;
+            padding: 8px 0 12px 0;
+            letter-spacing: 0.5px;
+            user-select: none;
+        }
+
+        [data-bs-theme="dark"] .day-name {
+            color: #adb5bd;
+        }
+
+        #calendarGrid {
+            display: contents;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: 0.15s;
+            width: 100%;
+            max-width: 80px;
+            margin: 0 auto;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .calendar-day.other-month {
+            color: #6c757d;
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .calendar-day.today {
+            background-color: #0d6efd;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        [data-bs-theme="dark"] .calendar-day.today {
+            background-color: #3b82f6;
+        }
+
+        .calendar-day.selected {
+            background-color: #198754;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.3);
+        }
+
+        [data-bs-theme="dark"] .calendar-day.selected {
+            background-color: #2ecc71;
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.4);
+        }
+
+        .calendar-day:not(.other-month):not(.today):not(.selected):hover {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        [data-bs-theme="dark"] .calendar-day:not(.other-month):not(.today):not(.selected):hover {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .calendar-day:not(.other-month):active {
+            transform: scale(0.92);
+        }
+
+        #fullDateDisplay {
+            color: #0d6efd;
+            font-weight: 500;
+        }
+
+        [data-bs-theme="dark"] #fullDateDisplay {
+            color: #3b82f6;
+        }
+
+        #calendarContainer {
+            touch-action: none;
+            cursor: grab;
+        }
+
+        #calendarContainer:active {
+            cursor: grabbing;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        #dayInput {
+            min-width: 55px;
+            max-width: 70px;
+        }
+
+        #monthInput {
+            min-width: 80px;
+            max-width: 110px;
+        }
+
+        #yearInput {
+            min-width: 65px;
+            max-width: 85px;
+        }
+
+        @media (max-width: 576px) {
+            .calendar-day {
+                font-size: 0.9rem;
+                max-width: 45px;
+            }
+            .day-name {
+                font-size: 0.7rem;
+                padding: 4px 0 8px 0;
+            }
+            .card-body {
+                padding: 0.75rem !important;
+            }
+            #fullDateDisplay {
+                font-size: 0.85rem;
+            }
+            #dayInput {
+                min-width: 40px;
+                max-width: 50px;
+                font-size: 0.75rem;
+                padding: 0.2rem 0.3rem;
+            }
+            #monthInput {
+                min-width: 55px;
+                max-width: 75px;
+                font-size: 0.75rem;
+                padding: 0.2rem 0.3rem;
+            }
+            #yearInput {
+                min-width: 50px;
+                max-width: 65px;
+                font-size: 0.75rem;
+                padding: 0.2rem 0.3rem;
+            }
+            .btn-sm {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.4rem;
+            }
+            .card-footer {
+                font-size: 0.6rem !important;
+            }
+        }
+
+        @media (min-width: 577px) and (max-width: 768px) {
+            .calendar-day {
+                font-size: 1rem;
+                max-width: 60px;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 992px) {
+            .calendar-day {
+                font-size: 1.1rem;
+                max-width: 70px;
+            }
+        }
+
+        @media (min-width: 993px) {
+            .calendar-day {
+                font-size: 1.2rem;
+                max-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-9 col-md-10 col-12">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-transparent py-3">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-xl-4 col-lg-5 col-md-12 col-12">
+                                <h5 class="mb-0 fw-normal" id="fullDateDisplay"></h5>
+                            </div>
+                            <div class="col-xl-8 col-lg-7 col-md-12 col-12 mt-2 mt-md-0">
+                                <div class="d-flex gap-1 flex-wrap flex-sm-nowrap">
+                                    <input type="number" class="form-control form-control-sm" id="dayInput" placeholder="Day" min="1" max="31" autocomplete="off" aria-label="Enter day">
+                                    <input type="text" class="form-control form-control-sm" id="monthInput" placeholder="Month" maxlength="20" autocomplete="off" aria-label="Enter month">
+                                    <input type="number" class="form-control form-control-sm" id="yearInput" placeholder="Year" min="1900" max="2100" autocomplete="off" aria-label="Enter year">
+                                    <button class="btn btn-outline-secondary btn-sm" id="goBtn" aria-label="Go to date"><i class="bi bi-arrow-right"></i></button>
+                                    <button class="btn btn-outline-secondary btn-sm" id="todayBtn" aria-label="Today"><i class="bi bi-calendar3"></i></button>
+                                    <button class="btn btn-outline-primary btn-sm" id="prevBtn" aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
+                                    <button class="btn btn-outline-primary btn-sm" id="nextBtn" aria-label="Next month"><i class="bi bi-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-4" id="calendarContainer">
+                        <div class="calendar-grid">
+                            <div class="day-name">Sun</div>
+                            <div class="day-name">Mon</div>
+                            <div class="day-name">Tue</div>
+                            <div class="day-name">Wed</div>
+                            <div class="day-name">Thu</div>
+                            <div class="day-name">Fri</div>
+                            <div class="day-name">Sat</div>
+                            <div id="calendarGrid"></div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center text-muted small py-2">
+                        <span><i class="bi bi-circle-fill text-primary" style="font-size: 0.5rem;"></i> Today</span>
+                        <span class="mx-2">|</span>
+                        <span><i class="bi bi-circle-fill text-success" style="font-size: 0.5rem;"></i> Selected</span>
+                        <span class="mx-2">|</span>
+                        <span>Calendria · Apps by Lemuel Owusu-Ansah</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function() {
+            const fullDateDisplay = document.getElementById('fullDateDisplay');
+            const gridEl = document.getElementById('calendarGrid');
+            const calendarContainer = document.getElementById('calendarContainer');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const todayBtn = document.getElementById('todayBtn');
+            const dayInput = document.getElementById('dayInput');
+            const monthInput = document.getElementById('monthInput');
+            const yearInput = document.getElementById('yearInput');
+            const goBtn = document.getElementById('goBtn');
+
+            let currentDate = new Date();
+            let currentYear = currentDate.getFullYear();
+            let currentMonth = currentDate.getMonth();
+            let selectedDay = currentDate.getDate();
+            let selectedYear = currentYear;
+            let selectedMonth = currentMonth;
+
+            let touchStartY = 0;
+            let isSwiping = false;
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            function updateFullDate(year, month, day) {
+                const dateObj = new Date(year, month, day);
+                const dayName = dayNames[dateObj.getDay()];
+                const monthName = monthNames[dateObj.getMonth()];
+                const dayNum = dateObj.getDate();
+                const yearNum = dateObj.getFullYear();
+                fullDateDisplay.textContent = dayName + ', ' + dayNum + ' ' + monthName + ', ' + yearNum;
+            }
+
+            function renderCalendar(year, month) {
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
+                const today = new Date();
+                const todayDate = today.getDate();
+                const todayMonth = today.getMonth();
+                const todayYear = today.getFullYear();
+
+                if (dayInput.value != selectedDay) {
+                    dayInput.value = selectedDay;
+                }
+                if (monthInput.value !== monthNames[month]) {
+                    monthInput.value = monthNames[month];
+                }
+                if (yearInput.value != year) {
+                    yearInput.value = year;
+                }
+
+                gridEl.innerHTML = '';
+                const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+                for (let i = 0; i < totalCells; i++) {
+                    let dayNumber;
+                    let isOtherMonth = false;
+
+                    if (i < firstDay) {
+                        dayNumber = daysInPrevMonth - firstDay + i + 1;
+                        isOtherMonth = true;
+                    } else if (i >= firstDay + daysInMonth) {
+                        dayNumber = i - (firstDay + daysInMonth) + 1;
+                        isOtherMonth = true;
+                    } else {
+                        dayNumber = i - firstDay + 1;
+                    }
+
+                    const dayDiv = document.createElement('div');
+                    dayDiv.className = 'calendar-day';
+                    dayDiv.textContent = dayNumber;
+
+                    if (isOtherMonth) {
+                        dayDiv.classList.add('other-month');
+                    }
+
+                    if (!isOtherMonth && year === todayYear && month === todayMonth && dayNumber === todayDate) {
+                        dayDiv.classList.add('today');
+                    }
+
+                    if (!isOtherMonth && year === selectedYear && month === selectedMonth && dayNumber === selectedDay) {
+                        dayDiv.classList.add('selected');
+                    }
+
+                    if (!isOtherMonth) {
+                        dayDiv.addEventListener('click', function() {
+                            selectedDay = dayNumber;
+                            selectedYear = year;
+                            selectedMonth = month;
+                            updateFullDate(year, month, dayNumber);
+                            renderCalendar(year, month);
+                        });
+
+                        dayDiv.addEventListener('touchend', function(e) {
+                            if (!isSwiping) {
+                                selectedDay = dayNumber;
+                                selectedYear = year;
+                                selectedMonth = month;
+                                updateFullDate(year, month, dayNumber);
+                                renderCalendar(year, month);
+                            }
+                        });
+                    }
+
+                    gridEl.appendChild(dayDiv);
+                }
+            }
+
+            function changeYear(delta) {
+                currentYear += delta;
+                if (selectedDay > new Date(currentYear, currentMonth, 0).getDate()) {
+                    selectedDay = new Date(currentYear, currentMonth, 0).getDate();
+                }
+                selectedYear = currentYear;
+                renderCalendar(currentYear, currentMonth);
+                updateFullDate(currentYear, currentMonth, selectedDay);
+            }
+
+            function changeMonth(delta) {
+                currentMonth += delta;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                } else if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                if (selectedDay > new Date(currentYear, currentMonth, 0).getDate()) {
+                    selectedDay = new Date(currentYear, currentMonth, 0).getDate();
+                }
+                selectedYear = currentYear;
+                selectedMonth = currentMonth;
+                renderCalendar(currentYear, currentMonth);
+                updateFullDate(currentYear, currentMonth, selectedDay);
+            }
+
+            function goToToday() {
+                const today = new Date();
+                currentYear = today.getFullYear();
+                currentMonth = today.getMonth();
+                selectedDay = today.getDate();
+                selectedYear = currentYear;
+                selectedMonth = currentMonth;
+                renderCalendar(currentYear, currentMonth);
+                updateFullDate(currentYear, currentMonth, selectedDay);
+            }
+
+            function goToDate() {
+                const dayVal = parseInt(dayInput.value);
+                const monthVal = monthInput.value.trim();
+                const yearVal = parseInt(yearInput.value);
+                let valid = false;
+                let targetDay = selectedDay;
+                let targetMonth = currentMonth;
+                let targetYear = currentYear;
+
+                if (!isNaN(dayVal) && dayVal >= 1 && dayVal <= 31) {
+                    targetDay = dayVal;
+                    valid = true;
+                }
+
+                if (monthVal !== '') {
+                    const lowerVal = monthVal.toLowerCase();
+                    const matchedIndex = monthNames.findIndex(name => name.toLowerCase() === lowerVal);
+                    if (matchedIndex !== -1) {
+                        targetMonth = matchedIndex;
+                        valid = true;
+                    } else {
+                        monthInput.value = monthNames[currentMonth];
+                        return;
+                    }
+                }
+
+                if (!isNaN(yearVal) && yearVal >= 1900 && yearVal <= 2100) {
+                    targetYear = yearVal;
+                    valid = true;
+                } else if (yearVal !== '' && !isNaN(yearVal)) {
+                    yearInput.value = currentYear;
+                    return;
+                }
+
+                if (valid) {
+                    const maxDay = new Date(targetYear, targetMonth + 1, 0).getDate();
+                    if (targetDay > maxDay) {
+                        targetDay = maxDay;
+                        dayInput.value = targetDay;
+                    }
+                    currentYear = targetYear;
+                    currentMonth = targetMonth;
+                    selectedDay = targetDay;
+                    selectedYear = targetYear;
+                    selectedMonth = targetMonth;
+                    renderCalendar(currentYear, currentMonth);
+                    updateFullDate(currentYear, currentMonth, selectedDay);
+                }
+            }
+
+            calendarContainer.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+                isSwiping = false;
+            }, { passive: true });
+
+            calendarContainer.addEventListener('touchmove', function(e) {
+                const touchY = e.touches[0].clientY;
+                const deltaY = touchStartY - touchY;
+                if (Math.abs(deltaY) > 30) {
+                    isSwiping = true;
+                    if (deltaY > 0) {
+                        changeYear(-1);
+                    } else {
+                        changeYear(1);
+                    }
+                    touchStartY = touchY;
+                }
+            }, { passive: true });
+
+            calendarContainer.addEventListener('wheel', function(e) {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    if (e.deltaY > 0) {
+                        changeYear(1);
+                    } else {
+                        changeYear(-1);
+                    }
+                }
+            }, { passive: false });
+
+            prevBtn.addEventListener('click', function() {
+                changeMonth(-1);
+            });
+
+            nextBtn.addEventListener('click', function() {
+                changeMonth(1);
+            });
+
+            todayBtn.addEventListener('click', goToToday);
+
+            dayInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    goBtn.click();
+                }
+            });
+
+            monthInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    goBtn.click();
+                }
+            });
+
+            yearInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    goBtn.click();
+                }
+            });
+
+            goBtn.addEventListener('click', goToDate);
+
+            renderCalendar(currentYear, currentMonth);
+            updateFullDate(currentYear, currentMonth, selectedDay);
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const htmlEl = document.documentElement;
+                const themeToggle = document.createElement('button');
+                themeToggle.className = 'btn btn-outline-secondary btn-sm position-fixed bottom-0 end-0 m-3 rounded-circle';
+                themeToggle.style.width = '44px';
+                themeToggle.style.height = '44px';
+                themeToggle.style.zIndex = '1050';
+                themeToggle.innerHTML = '<i class="bi bi-moon-fill"></i>';
+                themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+                document.body.appendChild(themeToggle);
+
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = htmlEl.getAttribute('data-bs-theme');
+                    if (currentTheme === 'dark') {
+                        htmlEl.setAttribute('data-bs-theme', 'light');
+                        themeToggle.innerHTML = '<i class="bi bi-moon-fill"></i>';
+                    } else {
+                        htmlEl.setAttribute('data-bs-theme', 'dark');
+                        themeToggle.innerHTML = '<i class="bi bi-sun-fill"></i>';
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
