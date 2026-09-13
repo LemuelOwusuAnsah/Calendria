@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>Calendria · Free Online Calendar</title>
+
+    <meta name="description" content="Calendria — a fast, elegant online calendar. View any month, add events, track holidays, and export your schedule.">
+    <meta name="keywords" content="calendria, calendar, online calendar, event planner, holidays, date picker">
+    <meta name="author" content="Lemuel Owusu-Ansah">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Calendria · Free Online Calendar">
+    <meta property="og:description" content="A fast, elegant online calendar with events, holidays, and export.">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Calendria · Free Online Calendar">
+    <meta name="twitter:description" content="A fast, elegant online calendar.">
+
+    <link rel="canonical" href="https://your-domain.com/calendria">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+
+    <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="container-xl">
+            <div class="d-flex align-items-center justify-content-between gap-3">
+                <a href="#" class="brand" aria-label="Calendria home">
+                    <span class="brand-icon"><i class="bi bi-calendar3"></i></span>
+                    <span class="brand-name">Calendria</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">
+                    <i class="bi bi-sun-fill"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="container-xl">
+            <div class="row g-4">
+
+                <div class="col-lg-7 col-xl-8">
+                    <section class="panel calendar-panel" aria-label="Calendar">
+                        <div class="panel-header calendar-panel-header">
+                            <div class="calendar-nav">
+                                <button class="btn-icon" id="prevBtn" aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
+                                <button class="btn-icon" id="nextBtn" aria-label="Next month"><i class="bi bi-chevron-right"></i></button>
+                                <button class="btn-icon" id="todayBtn" aria-label="Go to today" title="Today"><i class="bi bi-calendar-check"></i></button>
+                            </div>
+                            <h2 class="full-date" id="fullDateDisplay"></h2>
+                            <form class="date-jump" id="dateJumpForm" autocomplete="off">
+                                <input type="number" class="input-mini" id="dayInput" placeholder="DD" min="1" max="31" aria-label="Day">
+                                <input type="text" class="input-small" id="monthInput" placeholder="Month" maxlength="20" aria-label="Month">
+                                <input type="number" class="input-mini" id="yearInput" placeholder="YYYY" min="1900" max="2100" aria-label="Year">
+                                <button type="submit" class="btn-icon" id="goBtn" aria-label="Go to date"><i class="bi bi-arrow-right"></i></button>
+                            </form>
+                        </div>
+                        <div class="panel-body calendar-body" id="calendarContainer">
+                            <div class="calendar-grid">
+                                <div class="day-name">Sun</div>
+                                <div class="day-name">Mon</div>
+                                <div class="day-name">Tue</div>
+                                <div class="day-name">Wed</div>
+                                <div class="day-name">Thu</div>
+                                <div class="day-name">Fri</div>
+                                <div class="day-name">Sat</div>
+                                <div id="calendarGrid"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer calendar-legend">
+                            <span class="legend-item"><i class="bi bi-circle-fill legend-dot legend-today"></i> Today</span>
+                            <span class="legend-item"><i class="bi bi-circle-fill legend-dot legend-selected"></i> Selected</span>
+                            <span class="legend-item"><i class="bi bi-circle-fill legend-dot legend-holiday"></i> Holiday</span>
+                            <span class="legend-item"><i class="bi bi-circle-fill legend-dot legend-event"></i> Event</span>
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="col-lg-5 col-xl-4" aria-label="Sidebar">
+                    <div class="d-flex flex-column gap-4">
+
+                        <section class="panel" id="eventsPanel" aria-label="Events"></section>
+
+                        <section class="panel holidays-panel" aria-label="Holidays this month">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><i class="bi bi-calendar-heart"></i> Holidays this month</h3>
+                            </div>
+                            <div class="panel-body" id="holidaysList"></div>
+                        </section>
+
+                        <section class="panel history-panel" aria-label="Recent dates">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><i class="bi bi-clock-history"></i> Recent dates</h3>
+                                <button class="btn-text" id="clearHistoryBtn" aria-label="Clear history">Clear</button>
+                            </div>
+                            <div class="panel-body" id="historyList"></div>
+                        </section>
+
+                        <section class="panel export-panel" aria-label="Export and import">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><i class="bi bi-download"></i> Export &amp; Backup</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="export-grid">
+                                    <button class="btn-soft" id="exportCsvBtn"><i class="bi bi-filetype-csv"></i> Month CSV</button>
+                                    <button class="btn-soft" id="exportJsonBtn"><i class="bi bi-filetype-json"></i> Month JSON</button>
+                                    <button class="btn-soft" id="exportPdfBtn"><i class="bi bi-filetype-pdf"></i> Print / PDF</button>
+                                    <button class="btn-soft" id="exportEventsCsvBtn"><i class="bi bi-list-check"></i> All events</button>
+                                    <button class="btn-soft" id="exportBackupBtn"><i class="bi bi-shield-check"></i> Full backup</button>
+                                    <button class="btn-soft" id="importBackupBtn"><i class="bi bi-upload"></i> Import backup</button>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container-xl">
+            <p>Calendria &middot; Built by Lemuel Owusu-Ansah</p>
+        </div>
+    </footer>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/holidays.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/share.js"></script>
+</body>
+</html>
